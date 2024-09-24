@@ -7,6 +7,14 @@
   pointer-events: none;
 }
 
+.logo {
+  width: 9.25rem;
+  height: 2.5rem;
+  color: rgb(229, 9, 20);
+  fill: currentColor;
+  display: block;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -34,4 +42,11 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -20;
 }

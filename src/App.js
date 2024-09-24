@@ -1,11 +1,10 @@
 import "./App.css";
+import Body from "./components/Body.js";
 
 function App() {
   return (
     <div>
-      <header className="App-header text-4xl text-orange-700">
-        Welcome to react
-      </header>
+      <Body />
     </div>
   );
 }
