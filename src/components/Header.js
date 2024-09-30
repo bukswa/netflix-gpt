@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { removeUser } from "../utils/userSlice";
-import { signOut } from "firebase/auth";
+import { addUser, removeUser } from "../utils/userSlice";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
+import { toggleGptSearch } from "../utils/gptSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(addUser({ uid: user.uid, email: user.email }));
+        navigate("/browse");
+      } else {
+        // User is signed out
+        dispatch(removeUser());
+        navigate("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = () => {
     signOut(auth)
@@ -20,8 +36,12 @@ const Header = () => {
         // An error happened.
       });
   };
+
+  const handleGptSearch = () => {
+    dispatch(toggleGptSearch());
+  };
   return (
-    <div className="pl-32 pt-4 bg-gradient-to-b from-black flex justify-between pr-9">
+    <div className="w-screen pl-32 pt-4 bg-gradient-to-b from-black flex justify-between flex pr-9 absolute pb-4 z-10">
       <svg
         viewBox="0 0 111 30"
         version="1.1"
@@ -34,14 +54,30 @@ const Header = () => {
         </g>
       </svg>
       <div className="flex">
-        <img src={auth.currentUser.photoURL} width={40} height={40} alt="" />
-        <img
-          src="https://cdn4.iconfinder.com/data/icons/navigation-40/24/exit-512.png"
-          alt=""
-          height={40}
-          width={40}
-          onClick={handleLogout}
-        />
+        {auth.currentUser && (
+          <>
+            <button
+              className="px-4 bg-red-500 border border-black rounded-md mr-4"
+              onClick={handleGptSearch}
+            >
+              GPT Search
+            </button>
+            <img
+              src={auth.currentUser?.photoURL}
+              width={40}
+              height={40}
+              alt=""
+            />
+            <img
+              src="https://cdn4.iconfinder.com/data/icons/navigation-40/24/exit-512.png"
+              alt=""
+              height={40}
+              width={40}
+              onClick={handleLogout}
+              className="bg-white ml-4"
+            />
+          </>
+        )}
       </div>
     </div>
   );

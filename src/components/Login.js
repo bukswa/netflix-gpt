@@ -74,7 +74,8 @@ const Login = () => {
 
           updateProfile(user, {
             displayName: fullNameRef.current.value,
-            photoURL: "https://example.com/jane-q-user/profile.jpg",
+            photoURL:
+              "https://wallpapers.com/images/hd/netflix-profile-pictures-5yup5hd2i60x7ew3.jpg",
           })
             .then((userData) => {
               const { uid, displayName, photoURL, email } = auth.currentUser;
